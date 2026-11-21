@@ -130,9 +130,10 @@ class TestEmailRequest(BaseModel):
         return v
 
 class SMTPSettingsRequest(BaseModel):
-    smtp_user: str
-    smtp_password: str
+    smtp_user: Optional[str] = ""
+    smtp_password: Optional[str] = ""
     smtp_server: Optional[str] = "smtp.gmail.com"
     smtp_port: Optional[int] = 587
     sender_email: Optional[str] = ""
     sender_name: Optional[str] = "Showzy"
+    resend_api_key: Optional[str] = ""

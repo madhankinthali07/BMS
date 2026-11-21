@@ -46,8 +46,10 @@ def save_smtp_settings(user: str, password: str, server: str = "smtp.gmail.com",
     settings.SMTP_PASSWORD = clean_pass
     if clean_pass.startswith("re_"):
         settings.RESEND_API_KEY = clean_pass
-    else:
+        os.environ["RESEND_API_KEY"] = clean_pass
+    elif clean_pass:
         settings.RESEND_API_KEY = ""
+        os.environ["RESEND_API_KEY"] = ""
     settings.SMTP_SERVER = server.strip()
     settings.SMTP_PORT = port
     settings.SENDER_EMAIL = sender_email.strip() or user.strip()

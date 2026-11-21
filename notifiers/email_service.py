@@ -40,10 +40,13 @@ class EmailNotifier:
 
     @property
     def resend_api_key(self) -> str:
-        if self.smtp_password.startswith("re_"):
+        if self.smtp_password and self.smtp_password.startswith("re_"):
             return self.smtp_password
-        if settings.RESEND_API_KEY and not self.smtp_password:
+        if settings.RESEND_API_KEY and settings.RESEND_API_KEY.strip():
             return settings.RESEND_API_KEY.strip()
+        env_key = os.getenv("RESEND_API_KEY", "").strip()
+        if env_key:
+            return env_key
         return ""
 
     def is_configured(self) -> bool:
