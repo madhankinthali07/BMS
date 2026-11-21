@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Showzy &bull; Cinematic Real-Time Cinema & Ticket Drop Intelligence</title>
+  
+  <!-- Premium Typography: Plus Jakarta Sans & Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Space Grotesk"', 'sans-serif'],
+          },
+          colors: {
+            charcoal: {
+              base: '#15151D',
+              surface: '#1D1C27',
+              card: '#252431',
+              elevated: '#2D2A3A',
+              border: '#373344'
+            },
+            violet: {
+              primary: '#9565F5',
+              secondary: '#B18AFF',
+              dark: '#7C3AED',
+              deeper: '#6D28D9',
+              glow: 'rgba(149, 101, 245, 0.25)'
+            },
+            txt: {
+              primary: '#F5F2FA',
+              secondary: '#A6A1B5',
+              muted: '#777286'
+            },
+            status: {
+              success: '#36C995',
+              warning: '#F4B860',
+              error: '#F16B7B'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FontAwesome 6 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* Custom Scrollbar - Charcoal & Violet Accent */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #15151D;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #373344;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #9565F5;
+    }
+
+    /* Base Styling */
+    body {
+      background-color: #15151D;
+      background-image: 
+        radial-gradient(circle at 12% 18%, rgba(149, 101, 245, 0.08) 0px, transparent 40%),
+        radial-gradient(circle at 88% 25%, rgba(177, 138, 255, 0.05) 0px, transparent 45%),
+        radial-gradient(circle at 50% 85%, rgba(149, 101, 245, 0.06) 0px, transparent 50%);
+      background-attachment: fixed;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #F5F2FA;
+    }
+
+    /* Glass Surfaces */
+    .glass-surface {
+      background: rgba(29, 28, 39, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid #373344;
+    }
+    .glass-card {
+      background: rgba(37, 36, 49, 0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid #373344;
+    }
+    .glass-elevated {
+      background: rgba(45, 42, 58, 0.95);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid #373344;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6), 0 0 30px -10px rgba(149, 101, 245, 0.15);
+    }
+    .glass-input {
+      background: #1D1C27;
+      border: 1px solid #373344;
+      color: #F5F2FA;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-input:focus {
+      background: #252431;
+      border-color: #9565F5;
+      box-shadow: 0 0 0 3px rgba(149, 101, 245, 0.25);
+    }
+
+    /* Violet Gradients */
+    .violet-gradient {
+      background: linear-gradient(135deg, #9565F5 0%, #7C3AED 50%, #6D28D9 100%);
+    }
+    .violet-gradient-hover:hover {
+      background: linear-gradient(135deg, #B18AFF 0%, #9565F5 50%, #7C3AED 100%);
+      box-shadow: 0 0 24px rgba(149, 101, 245, 0.35);
+    }
+
+    /* Keyframe Animations */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.25; transform: scale(1); }
+      50% { opacity: 0.55; transform: scale(1.05); }
+    }
+    @keyframes subtleFadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes reelSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .animate-float {
+      animation: floatSlow 5s ease-in-out infinite;
+    }
+    .animate-pulse-glow {
+      animation: pulseGlow 6s ease-in-out infinite;
+    }
+    .animate-reel {
+      animation: reelSpin 16s linear infinite;
+    }
+    .fade-in-up {
+      animation: subtleFadeUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Interactive Card Micro-interactions */
+    .interactive-card {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .interactive-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(149, 101, 245, 0.5);
+      box-shadow: 0 16px 32px -10px rgba(0, 0, 0, 0.6), 0 0 20px -4px rgba(149, 101, 245, 0.18);
+    }
+
+    /* Accessibility: Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      .animate-float, .animate-pulse-glow, .animate-reel, .fade-in-up {
+        animation: none !important;
+      }
+      .interactive-card:hover {
+        transform: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-[#9565F5] selection:text-white">
+
+  <!-- Ambient Light Orbs -->
+  <div class="fixed top-0 left-1/4 w-96 h-96 bg-[#9565F5]/8 rounded-full blur-[140px] pointer-events-none animate-pulse-glow"></div>
+  <div class="fixed bottom-12 right-12 w-96 h-96 bg-[#B18AFF]/5 rounded-full blur-[150px] pointer-events-none animate-pulse-glow" style="animation-delay: 3s;"></div>
+
+  <!-- Top Navigation Bar -->
+  <header class="sticky top-0 z-50 glass-surface border-b border-[#373344]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Showzy Brand Logo -->
+      <div class="flex items-center space-x-3.5">
+        <div class="relative group cursor-pointer" onclick="switchTab('trackers')">
+          <div class="w-11 h-11 rounded-2xl violet-gradient flex items-center justify-center shadow-lg shadow-[#9565F5]/25 group-hover:scale-105 transition-transform duration-300">
+            <i class="fa-solid fa-film text-white text-lg animate-reel"></i>
+          </div>
+          <!-- Live pulse ping indicator -->
+          <span class="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#36C995] opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#36C995] border-2 border-[#15151D]"></span>
+          </span>
+        </div>
+
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-2xl font-extrabold tracking-tight font-display bg-clip-text text-transparent bg-gradient-to-r from-[#F5F2FA] via-[#F5F2FA] to-[#B18AFF]">
+              Showzy
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Header Actions (SMTP Status & Primary Actions) -->
+      <div class="flex items-center space-x-3">
+        <!-- Tab Keep-Alive Monitor Badge -->
+        <div id="tab-monitor-pill" title="Live continuous scanner active while this browser tab stays open" class="hidden sm:flex items-center space-x-2 text-xs px-3.5 py-2 rounded-xl bg-[#1D1C27] border border-[#373344] text-[#A6A1B5] shadow-sm transition-all">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#36C995] opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-[#36C995]"></span>
+          </span>
+          <span id="tab-monitor-text" class="font-medium text-[#F5F2FA]">Tab Monitor: <span class="text-[#36C995] font-semibold">Active</span></span>
+        </div>
+
+        <!-- SMTP Status Pill -->
+        <div id="smtp-status-pill" class="flex items-center space-x-2 text-xs px-3.5 py-2 rounded-xl bg-[#1D1C27] border border-[#373344] text-[#A6A1B5] shadow-sm transition-all">
+          <span class="w-2 h-2 rounded-full bg-[#F4B860] animate-pulse"></span>
+          <span id="smtp-status-text" class="font-medium text-[#A6A1B5]">Checking Email Status...</span>
+        </div>
+
+        <!-- Email Configuration Button -->
+        <button onclick="switchTab('settings')" class="text-xs font-semibold px-4 py-2.5 rounded-xl bg-[#252431] hover:bg-[#2D2A3A] text-[#F5F2FA] border border-[#373344] hover:border-[#9565F5]/50 flex items-center space-x-2 transition hover:shadow-lg">
+          <i class="fa-solid fa-envelope-circle-check text-[#B18AFF]"></i>
+          <span class="hidden sm:inline">Email Config</span>
+        </button>
+
+        <!-- Track Movie Primary Action Button -->
+        <button onclick="openCreateModal()" class="violet-gradient violet-gradient-hover text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-[#9565F5]/25 flex items-center space-x-2 transition hover:scale-[1.02] active:scale-[0.98]">
+          <i class="fa-solid fa-plus text-xs"></i>
+          <span>Track Movie</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Hero & Dashboard Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7 flex-1 w-full space-y-7">
+
+    <!-- Hero Section -->
+    <div class="relative rounded-3xl glass-card p-6 sm:p-8 overflow-hidden border border-[#373344]">
+      <!-- Ambient Lighting Behind Hero -->
+      <div class="absolute -right-12 -bottom-12 w-72 h-72 bg-[#9565F5]/12 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute left-1/3 top-0 w-60 h-28 bg-[#B18AFF]/8 rounded-full blur-2xl pointer-events-none"></div>
+
+      <div class="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+        <div class="max-w-3xl space-y-2.5">
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight font-display text-[#F5F2FA] leading-tight">
+            Never Miss a <span class="bg-clip-text text-transparent bg-gradient-to-r from-[#9565F5] via-[#B18AFF] to-[#F5F2FA]">Showtime Drop</span> Again.
+          </h1>
+          <p class="text-sm text-[#A6A1B5] leading-relaxed max-w-2xl">
+            Automated live monitoring across BookMyShow & District. Get instant notifications the second booking windows open.
+          </p>
+        </div>
+
+        <!-- Hero Actions -->
+        <div class="flex flex-col sm:flex-row lg:flex-col gap-3 w-full lg:w-auto shrink-0">
+          <button onclick="switchTab('theater-shows')" class="px-6 py-3.5 rounded-2xl bg-[#252431] hover:bg-[#2D2A3A] text-[#F5F2FA] font-bold text-sm border border-[#373344] hover:border-[#9565F5]/50 shadow-md flex items-center justify-center space-x-2 transition hover:scale-[1.01]">
+            <i class="fa-solid fa-calendar-days text-[#B18AFF]"></i>
+            <span>Browse Current Shows</span>
+          </button>
+          <button onclick="openCreateModal()" class="px-6 py-3.5 rounded-2xl violet-gradient violet-gradient-hover text-white font-bold text-sm shadow-xl shadow-[#9565F5]/25 flex items-center justify-center space-x-2 transition hover:scale-[1.02]">
+            <i class="fa-solid fa-satellite-dish"></i>
+            <span>Create Alert Tracker</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Navigation Tabs -->
+    <div class="flex items-center space-x-2 p-1.5 rounded-2xl glass-surface border border-[#373344] overflow-x-auto">
+      <button id="tab-btn-trackers" onclick="switchTab('trackers')" class="tab-button px-5 py-3 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-2.5 transition-all violet-gradient text-white shadow-lg shadow-[#9565F5]/20">
+        <i class="fa-solid fa-bell"></i>
+        <span>Active Trackers</span>
+        <span id="tracker-count-badge" class="ml-1.5 px-2 py-0.5 bg-white/20 text-white rounded-full text-xs font-extrabold">0</span>
+      </button>
+
+      <button id="tab-btn-theater-shows" onclick="switchTab('theater-shows')" class="tab-button px-5 py-3 rounded-xl text-xs sm:text-sm font-medium text-[#A6A1B5] hover:text-[#F5F2FA] hover:bg-[#252431] flex items-center space-x-2.5 transition-all">
+        <i class="fa-solid fa-masks-theater text-[#B18AFF]"></i>
+        <span>Current Shows by Theater</span>
+      </button>
+
+      <button id="tab-btn-logs" onclick="switchTab('logs')" class="tab-button px-5 py-3 rounded-xl text-xs sm:text-sm font-medium text-[#A6A1B5] hover:text-[#F5F2FA] hover:bg-[#252431] flex items-center space-x-2.5 transition-all">
+        <i class="fa-solid fa-clock-rotate-left text-[#F4B860]"></i>
+        <span>Sent Email Logs</span>
+      </button>
+
+      <button id="tab-btn-settings" onclick="switchTab('settings')" class="tab-button px-5 py-3 rounded-xl text-xs sm:text-sm font-medium text-[#A6A1B5] hover:text-[#F5F2FA] hover:bg-[#252431] flex items-center space-x-2.5 transition-all">
+        <i class="fa-solid fa-gear text-[#A6A1B5]"></i>
+        <span>Email & SMTP Setup</span>
+      </button>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 1: ACTIVE TRACKERS -->
+    <!-- ========================================== -->
+    <section id="tab-trackers" class="tab-content fade-in-up space-y-4">
+      
+      <!-- Live Tab Auto-Monitoring Info Bar -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between px-5 py-3 rounded-2xl glass-surface border border-[#373344] gap-2.5">
+        <div class="flex items-center space-x-2.5 text-xs text-[#A6A1B5]">
+          <span class="relative flex h-2.5 w-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#36C995] opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#36C995]"></span>
+          </span>
+          <span><strong>Tab Live Monitor:</strong> Keeps checking shows & sending email alerts continuously as long as this tab is open.</span>
+        </div>
+        <div class="flex items-center space-x-3 text-xs text-[#777286] shrink-0">
+          <span id="tab-last-checked-time">Last scan: Initializing...</span>
+          <button onclick="triggerManualTabScan()" class="text-[#B18AFF] hover:text-[#F5F2FA] font-bold underline-offset-2 hover:underline transition flex items-center space-x-1">
+            <i class="fa-solid fa-arrows-rotate text-[11px]"></i>
+            <span>Scan Now</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="trackers-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- Empty State Placeholder -->
+      <div id="no-trackers-placeholder" class="hidden text-center py-20 glass-card rounded-3xl border border-dashed border-[#373344] p-8">
+        <div class="w-20 h-20 mx-auto rounded-3xl bg-[#9565F5]/10 border border-[#9565F5]/25 flex items-center justify-center text-[#B18AFF] mb-5 text-3xl animate-float">
+          <i class="fa-solid fa-ticket"></i>
+        </div>
+        <h3 class="text-xl font-bold text-[#F5F2FA] font-display">No Active Movie Trackers</h3>
+        <p class="text-sm text-[#A6A1B5] mt-2 max-w-md mx-auto leading-relaxed">
+          Monitor your favorite theater (e.g. <strong>Sri Melody, Jagadamba 70mm, Sarat Theatre, INOX Varun Beach</strong>) to get notified via Gmail the instant tickets open.
+        </p>
+        <button onclick="openCreateModal()" class="mt-6 violet-gradient violet-gradient-hover text-white font-bold px-6 py-3 rounded-xl text-sm shadow-xl shadow-[#9565F5]/25 transition hover:scale-105 inline-flex items-center space-x-2">
+          <i class="fa-solid fa-plus text-xs"></i>
+          <span>Create Your First Tracker</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: CURRENT SHOWS BY THEATER -->
+    <!-- ========================================== -->
+    <section id="tab-theater-shows" class="tab-content hidden fade-in-up space-y-6">
+      
+      <!-- Filter Bar -->
+      <div class="glass-card rounded-3xl p-6 sm:p-7 border border-[#373344]">
+        <div class="mb-4 flex items-center justify-between">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-8 h-8 rounded-lg bg-[#9565F5]/15 text-[#B18AFF] flex items-center justify-center text-sm font-bold">
+              <i class="fa-solid fa-filter"></i>
+            </div>
+            <h3 class="text-base font-bold text-[#F5F2FA]">Live Theater Query Filter</h3>
+          </div>
+          <span class="text-xs text-[#A6A1B5] hidden sm:inline">Real-Time Schedules Only</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+          
+          <!-- Platform Filter -->
+          <div>
+            <label class="block text-xs font-semibold text-[#A6A1B5] mb-1.5">Platform</label>
+            <div class="relative">
+              <select id="browse-platform" onchange="onBrowseCityChange()" class="w-full glass-input rounded-xl px-3.5 py-3 text-sm text-[#F5F2FA] focus:outline-none appearance-none pr-9">
+                <option value="all">All Platforms (District & BMS)</option>
+                <option value="district" selected>District (by Zomato)</option>
+                <option value="bookmyshow">BookMyShow</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-[#A6A1B5]">
+                <i class="fa-solid fa-chevron-down text-xs"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- City Selector -->
+          <div>
+            <label class="block text-xs font-semibold text-[#A6A1B5] mb-1.5">Select City</label>
+            <div class="relative">
+              <select id="browse-city" onchange="onBrowseCityChange()" class="w-full glass-input rounded-xl px-3.5 py-3 text-sm text-[#F5F2FA] focus:outline-none appearance-none pr-9">
+                <!-- Populated via JS -->
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-[#A6A1B5]">
+                <i class="fa-solid fa-chevron-down text-xs"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Theater Selector -->
+          <div class="sm:col-span-2 lg:col-span-1">
+            <label class="block text-xs font-semibold text-[#A6A1B5] mb-1.5">Theater / Cinema Venue</label>
+            <div class="relative">
+              <select id="browse-theater" class="w-full glass-input rounded-xl px-3.5 py-3 text-sm text-[#F5F2FA] focus:outline-none appearance-none pr-9">
+                <!-- Populated via JS -->
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-[#A6A1B5]">
+                <i class="fa-solid fa-chevron-down text-xs"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Date Picker -->
+          <div>
+            <label class="block text-xs font-semibold text-[#A6A1B5] mb-1.5">Target Date</label>
+            <input type="date" id="browse-date" class="w-full glass-input rounded-xl px-3.5 py-2.5 text-sm text-[#F5F2FA] focus:outline-none">
+          </div>
+
+          <!-- Query Button -->
+          <div>
+            <button onclick="fetchCurrentTheaterShows()" class="w-full violet-gradient violet-gradient-hover text-white font-bold px-6 py-3 rounded-xl text-sm shadow-lg shadow-[#9565F5]/25 flex items-center justify-center space-x-2 transition hover:scale-[1.02]">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <span>View Shows</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Theater Shows Results Container -->
+      <div id="theater-shows-results-container" class="glass-card rounded-3xl p-6 sm:p-8 border border-[#373344]">
+        
+        <div id="theater-shows-header" class="mb-6 pb-4 border-b border-[#373344] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+          <div>
+            <h3 id="theater-shows-title" class="text-xl font-bold text-[#F5F2FA] font-display">Theater Current Shows</h3>
+            <p id="theater-shows-subtitle" class="text-xs text-[#A6A1B5] mt-1">Select a theater above to view active movies and real-time showtimes.</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs px-3 py-1 rounded-full bg-[#36C995]/10 text-[#36C995] border border-[#36C995]/30 font-medium">
+              Live Verified
+            </span>
+          </div>
+        </div>
+
+        <div id="theater-shows-list" class="space-y-4">
+          <div class="text-center py-16 text-[#A6A1B5] text-sm">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-[#1D1C27] border border-[#373344] flex items-center justify-center text-[#777286] mb-3 text-2xl">
+              <i class="fa-solid fa-masks-theater text-[#B18AFF]"></i>
+            </div>
+            Click <strong class="text-[#F5F2FA]">"View Shows"</strong> above to extract real-time showtimes and ticket availability.
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: SENT EMAIL LOGS -->
+    <!-- ========================================== -->
+    <section id="tab-logs" class="tab-content hidden fade-in-up">
+      <div class="glass-card rounded-3xl border border-[#373344] overflow-hidden">
+        
+        <div class="p-6 border-b border-[#373344] flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-[#F4B860]/10 text-[#F4B860] flex items-center justify-center">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-[#F5F2FA] text-base">Alerts & Email Delivery History</h3>
+            </div>
+          </div>
+          <button onclick="loadLogs()" class="text-xs font-semibold px-4 py-2 rounded-xl bg-[#1D1C27] hover:bg-[#2D2A3A] text-[#F5F2FA] border border-[#373344] hover:border-[#9565F5]/40 flex items-center space-x-1.5 transition">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>Refresh Logs</span>
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-[#F5F2FA]">
+            <thead class="bg-[#1D1C27] text-xs uppercase tracking-wider text-[#A6A1B5] border-b border-[#373344]">
+              <tr>
+                <th class="px-6 py-3.5 font-bold">Timestamp</th>
+                <th class="px-6 py-3.5 font-bold">Recipient</th>
+                <th class="px-6 py-3.5 font-bold">Subject</th>
+                <th class="px-6 py-3.5 font-bold">Content Detected</th>
+                <th class="px-6 py-3.5 text-right font-bold">Status</th>
+              </tr>
+            </thead>
+            <tbody id="logs-table-body" class="divide-y divide-[#373344]">
+              <!-- Populated via JS -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: SETTINGS & SMTP EMAIL CONFIG -->
+    <!-- ========================================== -->
+    <section id="tab-settings" class="tab-content hidden fade-in-up">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- Gmail Settings Card -->
+        <div class="glass-card rounded-3xl p-6 sm:p-8 border border-[#373344]">
+          <div class="flex items-center justify-between mb-4 pb-4 border-b border-[#373344]">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl bg-[#9565F5]/10 text-[#B18AFF] flex items-center justify-center text-lg">
+                <i class="fa-solid fa-paper-plane"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-[#F5F2FA] font-display">Gmail / SMTP Settings</h3>
+                <p class="text-xs text-[#A6A1B5]">Configure credentials for instant show alert delivery.</p>
+              </div>
+            </div>
+            <span id="smtp-badge-inner" class="text-xs font-bold px-3 py-1 rounded-full bg-[#1D1C27] text-[#A6A1B5] border border-[#373344]">
+              Checking...
+            </span>
+          </div>
+
+          <form onsubmit="handleSaveSMTP(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-[#A6A1B5] mb-1.5">Your Gmail Address</label>
+              <input type="email" id="smtp-user-input" required placeholder="e.g. yourmail@gmail.com" class="w-full glass-input rounded-xl px-4 py-3 text-sm text-[#F5F2FA] focus:outline-none">
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="block text-xs font-semibold text-[#A6A1B5]">
+                  Google 16-Character App Password
+                </label>
+                <a href="https://myaccount.google.com/apppasswords" target="_blank" class="text-[#B18AFF] hover:underline text-xs font-semibold flex items-center gap-1">
+                  <span>Generate App Password</span>
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+              </div>
+              <div class="relative">
+                <input type="password" id="smtp-password-input" required placeholder="16-character code (e.g. abcd efgh ijkl mnop)" class="w-full glass-input rounded-xl px-4 py-3 text-sm text-[#F5F2FA] focus:outline-none pr-10">
+                <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3.5 top-3.5 text-[#A6A1B5] hover:text-[#F5F2FA] transition">
+                  <i id="eye-icon" class="fa-regular fa-eye"></i>
+                </button>
+              </div>
+              <p class="text-[11px] text-[#777286] mt-1.5">
+                Never enter your personal account password. Generate a secure 16-character Google App Password.
+              </p>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-[#A6A1B5] mb-1.5">Sender Name (Optional)</label>
+              <input type="text" id="smtp-sender-name" placeholder="Showzy" class="w-full glass-input rounded-xl px-4 py-3 text-sm text-[#F5F2FA] focus:outline-none">
+            </div>
+
+            <button type="submit" id="btn-save-smtp" class="w-full violet-gradient violet-gradient-hover text-white text-sm font-bold px-5 py-3.5 rounded-xl shadow-lg shadow-[#9565F5]/25 flex items-center justify-center space-x-2 transition hover:scale-[1.01]">
+              <i class="fa-solid fa-floppy-disk"></i>
+              <span>Save & Connect Gmail</span>
+            </button>
+          </form>
+
+          <hr class="border-[#373344] my-6">
+
+          <!-- Verification Test Email -->
+          <div class="space-y-3">
+            <h4 class="text-xs font-bold text-[#A6A1B5] uppercase tracking-wider flex items-center gap-2">
+              <i class="fa-solid fa-vial text-[#36C995]"></i>
+              <span>Verify Inbox Delivery</span>
+            </h4>
+            <div class="flex gap-2">
+              <input type="email" id="test-recipient-input" placeholder="Enter recipient email address" class="flex-1 glass-input rounded-xl px-4 py-2.5 text-sm text-[#F5F2FA] focus:outline-none">
+              <button onclick="sendTestEmail()" id="btn-test-email" class="bg-[#1D1C27] hover:bg-[#2D2A3A] text-white text-xs font-bold px-5 py-2.5 rounded-xl border border-[#373344] hover:border-[#9565F5]/40 shrink-0 transition">
+                Send Test Alert
+              </button>
+            </div>
+            <div id="test-email-status" class="text-xs hidden p-3.5 rounded-xl border leading-relaxed"></div>
+          </div>
+        </div>
+
+        <!-- Google Guide Walkthrough -->
+        <div class="glass-card rounded-3xl p-6 sm:p-8 border border-[#373344] flex flex-col justify-between">
+          <div>
+            <div class="flex items-center space-x-3 mb-4 pb-4 border-b border-[#373344]">
+              <div class="w-10 h-10 rounded-xl bg-[#9565F5]/10 text-[#B18AFF] flex items-center justify-center text-lg">
+                <i class="fa-brands fa-google"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-[#F5F2FA] font-display">How to Generate App Password</h3>
+                <p class="text-xs text-[#A6A1B5]">Takes less than 60 seconds.</p>
+              </div>
+            </div>
+
+            <div class="text-xs text-[#A6A1B5] space-y-3.5 leading-relaxed">
+              <p>Google requires an <strong>App Password</strong> for safe background notification automation:</p>
+              
+              <ol class="list-decimal list-inside space-y-2.5 bg-[#1D1C27] p-4 rounded-2xl border border-[#373344]">
+                <li>Visit your <a href="https://myaccount.google.com/security" target="_blank" class="text-[#B18AFF] hover:underline font-semibold">Google Account Security Settings &rarr;</a></li>
+                <li>Ensure <strong>2-Step Verification</strong> is enabled on your Gmail.</li>
+                <li>Go directly to <a href="https://myaccount.google.com/apppasswords" target="_blank" class="text-[#B18AFF] hover:underline font-semibold">Google App Passwords &rarr;</a></li>
+                <li>Under "App name", enter <strong class="text-[#F5F2FA]">Showzy</strong> and click <strong class="text-[#F5F2FA]">Create</strong>.</li>
+                <li>Copy the generated 16-character code (e.g. <code class="text-[#36C995] font-mono font-bold">abcd efgh ijkl mnop</code>).</li>
+                <li>Paste it in the left form and click <strong class="text-[#F5F2FA]">"Save & Connect Gmail"</strong>.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL: CREATE NEW TRACKER -->
+  <!-- ========================================== -->
+  <div id="create-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="glass-elevated bg-[#252431]/95 border border-[#373344] rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl relative max-h-[90vh] overflow-y-auto fade-in-up">
+      
+      <div class="flex items-center justify-between pb-4 border-b border-[#373344]">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl violet-gradient flex items-center justify-center text-white text-base shadow-lg shadow-[#9565F5]/30">
+            <i class="fa-solid fa-ticket"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-[#F5F2FA] font-display">Track Movie & Theater</h3>
+            <p class="text-xs text-[#A6A1B5]">Receive an email alert when showtimes drop.</p>
+          </div>
+        </div>
+        <button onclick="closeCreateModal()" class="w-8 h-8 rounded-full bg-[#1D1C27] hover:bg-[#2D2A3A] text-[#A6A1B5] hover:text-[#F5F2FA] border border-[#373344] flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <form id="create-tracker-form" onsubmit="handleCreateTracker(event)" class="mt-5 space-y-4">
+        
+        <!-- Platform Selection -->
+        <div>
+          <label class="block text-xs font-semibold text-[#A6A1B5] mb-1.5">Platform Engine</label>
+          <div class="relative">
+            <select id="modal-platform" class="w-full glass-input rounded-xl px-3.5 py-3 text-sm text-[#F5F2FA] focus:outline-none appearance-none pr-9">
+              <option value="bookmyshow">BookMyShow</option>
+              <option value="district">District (by Zomato)</option>
+              <option value="both">Both Platforms (BookMyShow + District)</option>
+              <option value="simulation">Demo / Simulation Mode</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-[#A6A1B5]">
+              <i class="fa-solid fa-chevron-down text-xs"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- City Selection -->
+        <div>
+          <label class="block text-xs font-semibold text-[#A6A1B5] mb-1.5">City</label>
+          <div class="relative">
+            <select id="modal-city" onchange="onModalCityChange()" class="w-full glass-input rounded-xl px-3.5 py-3 text-sm text-[#F5F2FA] focus:outline-none appearance-none pr-9">
+              <!-- Populated via JS -->
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-[#A6A1B5]">
+              <i class="fa-solid fa-chevron-down text-xs"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Movie Input with Option to Track Any Movie -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-xs font-semibold text-[#A6A1B5]">Movie Name</label>
+            <label class="flex items-center space-x-1.5 cursor-pointer text-xs text-[#B18AFF] hover:text-[#F5F2FA] transition">
+              <input type="checkbox" id="modal-any-movie-checkbox" onchange="toggleAnyMovieTracking(this.checked)" class="rounded accent-[#9565F5] w-3.5 h-3.5 cursor-pointer">
+              <span class="font-semibold">Track ANY Movie Release</span>
+            </label>
+          </div>
+          <input list="movie-datalist" id="modal-movie" placeholder="e.g. Scene, Ramayana, DNK, Pushpa 2" required class="w-full glass-input rounded-xl px-3.5 py-3 text-sm text-[#F5F2FA] focus:outline-none">
+          <datalist id="movie-datalist">
+            <option value="Any Movie (Notify any show released)">
+            <option value="Scene (UA16+)">
+            <option value="Ramayana">
+            <option value="ENE Repeat">
+            <option value="DNK">
+            <option value="Pushpa 2: The Rule">
+            <option value="Game Changer">
+            <option value="Avatar: Fire and Ash">
+          </datalist>
+          <p id="any-movie-hint" class="hidden text-[11px] text-[#36C995] mt-1.5 flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Active: You will be notified the instant ANY movie or show releases for this theater!</span>
+          </p>
+        </div>
+
+        <!-- Theater Input -->
+        <div>
+          <label class="block text-xs font-semibold text-[#A6A1B5] mb-1.5">Theater / Cinema Hall</label>
+          <input list="theater-datalist" id="modal-theater" placeholder="e.g. Sarat Theatre, Melody, Sangam, Jagadamba" required class="w-full glass-input rounded-xl px-3.5 py-3 text-sm text-[#F5F2FA] focus:outline-none">
+          <datalist id="theater-datalist"></datalist>
+        </div>
+
+        <!-- Date & Format Grid -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-[#A6A1B5] mb-1.5">Target Date</label>
+            <input type="date" id="modal-date" required class="w-full glass-input rounded-xl px-3.5 py-2.5 text-sm text-[#F5F2FA] focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-[#A6A1B5] mb-1.5">Format</label>
+            <div class="relative">
+              <select id="modal-format" class="w-full glass-input rounded-xl px-3 py-2.5 text-sm text-[#F5F2FA] focus:outline-none appearance-none pr-8">
+                <option value="ALL">All Formats</option>
+                <option value="4K Dolby Atmos">4K Dolby Atmos</option>
+                <option value="IMAX">IMAX (2D/3D)</option>
+                <option value="4DX">4DX</option>
+                <option value="3D">3D</option>
+                <option value="2D">Standard 2D</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-[#A6A1B5]">
+                <i class="fa-solid fa-chevron-down text-xs"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Email Address -->
+        <div>
+          <label class="block text-xs font-semibold text-[#A6A1B5] mb-1.5">Send Alerts To (Your Email)</label>
+          <input type="email" id="modal-email" placeholder="e.g. yourmail@gmail.com" required class="w-full glass-input rounded-xl px-3.5 py-3 text-sm text-[#F5F2FA] focus:outline-none">
+        </div>
+
+        <!-- Interval Slider -->
+        <div>
+          <div class="flex justify-between text-xs text-[#A6A1B5] mb-1.5 font-semibold">
+            <span>Check Frequency</span>
+            <span id="interval-label" class="text-[#B18AFF] font-bold">Every 2 minutes</span>
+          </div>
+          <input type="range" id="modal-interval" min="30" max="600" step="30" value="120" oninput="updateIntervalLabel(this.value)" class="w-full accent-[#9565F5] cursor-pointer">
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-2">
+          <button type="submit" id="btn-submit-tracker" class="w-full violet-gradient violet-gradient-hover text-white font-bold py-3.5 rounded-xl shadow-xl shadow-[#9565F5]/30 flex items-center justify-center space-x-2 transition hover:scale-[1.01]">
+            <i class="fa-solid fa-satellite-dish"></i>
+            <span>Start Real-Time Tracking</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: SHOWS VIEWER -->
+  <!-- ========================================== -->
+  <div id="shows-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="glass-elevated bg-[#252431]/95 border border-[#373344] rounded-3xl max-w-2xl w-full p-6 sm:p-7 shadow-2xl relative max-h-[85vh] flex flex-col fade-in-up">
+      
+      <div class="flex items-center justify-between pb-4 border-b border-[#373344] shrink-0">
+        <div>
+          <h3 id="modal-shows-title" class="text-lg font-bold text-[#F5F2FA] font-display">Current Shows</h3>
+          <p id="modal-shows-subtitle" class="text-xs text-[#A6A1B5] mt-0.5"></p>
+        </div>
+        <button onclick="closeShowsModal()" class="w-8 h-8 rounded-full bg-[#1D1C27] hover:bg-[#2D2A3A] text-[#A6A1B5] hover:text-[#F5F2FA] border border-[#373344] flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div id="modal-shows-content" class="py-4 overflow-y-auto flex-1 space-y-4">
+        <!-- Shows cards rendered via JS -->
+      </div>
+
+      <div class="pt-4 border-t border-[#373344] flex justify-end shrink-0">
+        <button onclick="closeShowsModal()" class="px-5 py-2.5 rounded-xl bg-[#1D1C27] hover:bg-[#2D2A3A] text-sm font-semibold text-[#F5F2FA] border border-[#373344] transition">
+          Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-auto border-t border-[#373344] py-6 text-center text-xs text-[#777286]">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center space-x-2">
+        <span class="w-2 h-2 rounded-full bg-[#9565F5]"></span>
+        <span class="font-semibold text-[#A6A1B5]">Showzy</span>
+      </div>
+      <div>
+        Instant cinema ticket drop notifications across all platforms.
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- JAVASCRIPT LOGIC (100% PRESERVED BACKEND INTEGRATION) -->
+  <!-- ========================================== -->
+  <script>
+    let trackersData = [];
+    let citiesList = [];
+    let monitorWorker = null;
+    let isCheckingCycle = false;
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('modal-date').value = today;
+      document.getElementById('browse-date').value = today;
+
+      await loadCities();
+      await checkSMTPSettings();
+      await loadTrackers();
+      await onBrowseCityChange();
+
+      // Launch unthrottled Web Worker tab keep-alive monitor
+      initTabKeepAliveMonitor();
+    });
+
+    // --- Unthrottled Web Worker Tab Keep-Alive Monitor Engine ---
+    function initTabKeepAliveMonitor() {
+      try {
+        const workerScript = `
+          let timer = null;
+          self.onmessage = function(e) {
+            if (e.data === 'start') {
+              if (!timer) {
+                timer = setInterval(function() {
+                  self.postMessage('tick');
+                }, 15000);
+              }
+            } else if (e.data === 'stop') {
+              if (timer) {
+                clearInterval(timer);
+                timer = null;
+              }
+            }
+          };
+        `;
+        const blob = new Blob([workerScript], { type: 'application/javascript' });
+        const workerUrl = URL.createObjectURL(blob);
+        monitorWorker = new Worker(workerUrl);
+        
+        monitorWorker.onmessage = function(e) {
+          if (e.data === 'tick') {
+            triggerTabMonitorCycle(false);
+          }
+        };
+        monitorWorker.postMessage('start');
+      } catch (err) {
+        console.warn("Web Worker unavailable, using interval fallback:", err);
+        setInterval(() => triggerTabMonitorCycle(false), 15000);
+      }
+
+      // First monitor cycle run 3s after page load
+      setTimeout(() => triggerTabMonitorCycle(false), 3000);
+    }
+
+    async function triggerTabMonitorCycle(forceAll = false) {
+      if (isCheckingCycle) return;
+      isCheckingCycle = true;
+      try {
+        const res = await fetch(`/api/monitor/cycle?force_all=${forceAll ? 'true' : 'false'}`, {
+          method: 'POST'
+        });
+        const data = await res.json();
+        
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        
+        const pillText = document.getElementById('tab-monitor-text');
+        const lastCheckEl = document.getElementById('tab-last-checked-time');
+        
+        if (data.status === 'success' && data.result) {
+          const stats = data.result;
+          if (pillText) {
+            pillText.innerHTML = `Tab Monitor: <span class="text-[#36C995] font-semibold">Active</span> <span class="text-[10px] text-[#A6A1B5]">(${stats.active_tasks} watching)</span>`;
+          }
+          if (lastCheckEl) {
+            lastCheckEl.textContent = `Last scan: ${timeStr} • ${stats.checked_tasks} checked`;
+          }
+          if (stats.new_shows_found > 0) {
+            document.title = `🚨 ${stats.new_shows_found} New Show(s) Released! - Showzy`;
+          } else if (stats.active_tasks > 0) {
+            document.title = `Showzy (${stats.active_tasks} Active)`;
+          } else {
+            document.title = `Showzy - Live Cinema Showtime Monitor`;
+          }
+        } else {
+          if (lastCheckEl) lastCheckEl.textContent = `Last scan: ${timeStr}`;
+        }
+
+        await loadTrackers();
+      } catch (err) {
+        console.error("Tab monitor cycle failed:", err);
+      } finally {
+        isCheckingCycle = false;
+      }
+    }
+
+    async function triggerManualTabScan() {
+      const lastCheckEl = document.getElementById('tab-last-checked-time');
+      if (lastCheckEl) lastCheckEl.textContent = 'Scanning now...';
+      await triggerTabMonitorCycle(true);
+    }
+
+    async function loadCities() {
+      try {
+        const res = await fetch('/api/cities');
+        citiesList = await res.json();
+        
+        const modalSelect = document.getElementById('modal-city');
+        const browseSelect = document.getElementById('browse-city');
+        
+        modalSelect.innerHTML = '';
+        browseSelect.innerHTML = '';
+
+        citiesList.forEach(c => {
+          const opt1 = document.createElement('option');
+          opt1.value = c.id;
+          opt1.textContent = c.name;
+          modalSelect.appendChild(opt1);
+
+          const opt2 = document.createElement('option');
+          opt2.value = c.id;
+          opt2.textContent = c.name;
+          browseSelect.appendChild(opt2);
+        });
+
+        // Default to vizag
+        modalSelect.value = 'vizag';
+        browseSelect.value = 'vizag';
+        await loadTheatersForModal('vizag');
+      } catch (e) {
+        console.error("Failed to load cities", e);
+      }
+    }
+
+    async function checkSMTPSettings() {
+      try {
+        const res = await fetch('/api/settings/smtp');
+        const data = await res.json();
+        
+        const pill = document.getElementById('smtp-status-pill');
+        const text = document.getElementById('smtp-status-text');
+        const badge = document.getElementById('smtp-badge-inner');
+        const userInput = document.getElementById('smtp-user-input');
+        const senderInput = document.getElementById('smtp-sender-name');
+        const testRecipient = document.getElementById('test-recipient-input');
+
+        if (data.is_configured) {
+          pill.className = 'flex items-center space-x-2 text-xs px-3.5 py-2 rounded-xl bg-[#36C995]/15 text-[#36C995] border border-[#36C995]/30 shadow-sm';
+          pill.innerHTML = `<span class="w-2 h-2 rounded-full bg-[#36C995] animate-pulse"></span><span id="smtp-status-text" class="font-semibold text-[#36C995]">Email Active (${data.smtp_user})</span>`;
+          badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-[#36C995]/20 text-[#36C995] border border-[#36C995]/40';
+          badge.textContent = 'Connected';
+          userInput.value = data.smtp_user;
+          testRecipient.value = data.smtp_user;
+        } else {
+          pill.className = 'flex items-center space-x-2 text-xs px-3.5 py-2 rounded-xl bg-[#F4B860]/15 text-[#F4B860] border border-[#F4B860]/30 shadow-sm';
+          pill.innerHTML = `<span class="w-2 h-2 rounded-full bg-[#F4B860] animate-pulse"></span><span id="smtp-status-text" class="font-semibold text-[#F4B860]">Email Not Configured</span>`;
+          badge.className = 'text-xs font-bold px-3 py-1 rounded-full bg-[#F4B860]/20 text-[#F4B860] border border-[#F4B860]/40';
+          badge.textContent = 'Not Configured';
+        }
+        if (data.sender_name) senderInput.value = data.sender_name;
+      } catch (e) {
+        console.error("Error checking SMTP", e);
+      }
+    }
+
+    async function handleSaveSMTP(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-save-smtp');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Saving & Testing Connection...</span>`;
+
+      const user = document.getElementById('smtp-user-input').value.trim();
+      const pass = document.getElementById('smtp-password-input').value.trim();
+      const sender = document.getElementById('smtp-sender-name').value.trim();
+
+      try {
+        const res = await fetch('/api/settings/smtp', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            smtp_user: user,
+            smtp_password: pass,
+            smtp_server: 'smtp.gmail.com',
+            smtp_port: 587,
+            sender_name: sender || 'Showzy'
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert("✅ Gmail SMTP saved successfully! Click 'Send Test Alert' below to test receiving an email.");
+          await checkSMTPSettings();
+        } else {
+          alert("Error: " + data.detail);
+        }
+      } catch (err) {
+        alert("Failed to save SMTP settings: " + err);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i><span>Save & Connect Gmail</span>`;
+      }
+    }
+
+    async function sendTestEmail() {
+      const email = document.getElementById('test-recipient-input').value.trim();
+      const statusBox = document.getElementById('test-email-status');
+      const btn = document.getElementById('btn-test-email');
+
+      if (!email) {
+        alert("Please enter a recipient email address.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Sending...`;
+      statusBox.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/test-email', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ recipient_email: email })
+        });
+        const data = await res.json();
+
+        statusBox.classList.remove('hidden');
+        if (data.success) {
+          statusBox.className = 'text-xs p-3.5 rounded-xl border bg-[#36C995]/15 border-[#36C995]/40 text-[#36C995]';
+          statusBox.innerHTML = `<strong>✅ Success!</strong> ${data.message}`;
+        } else {
+          statusBox.className = 'text-xs p-3.5 rounded-xl border bg-[#F16B7B]/15 border-[#F16B7B]/40 text-[#F16B7B]';
+          statusBox.innerHTML = `<strong>❌ Email Failed:</strong> ${data.message}`;
+        }
+      } catch (err) {
+        statusBox.classList.remove('hidden');
+        statusBox.className = 'text-xs p-3.5 rounded-xl border bg-[#F16B7B]/15 border-[#F16B7B]/40 text-[#F16B7B]';
+        statusBox.innerHTML = `<strong>Error:</strong> ${err}`;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `Send Test Alert`;
+      }
+    }
+
+    function togglePasswordVisibility() {
+      const input = document.getElementById('smtp-password-input');
+      const icon = document.getElementById('eye-icon');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fa-regular fa-eye-slash';
+      } else {
+        input.type = 'password';
+        icon.className = 'fa-regular fa-eye';
+      }
+    }
+
+    async function onModalCityChange() {
+      const city = document.getElementById('modal-city').value;
+      await loadTheatersForModal(city);
+    }
+
+    async function loadTheatersForModal(city) {
+      try {
+        const res = await fetch(`/api/search/theaters?city=${city}`);
+        const theaters = await res.json();
+        const dl = document.getElementById('theater-datalist');
+        dl.innerHTML = '';
+        theaters.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t.name;
+          dl.appendChild(opt);
+        });
+        if (theaters.length > 0) {
+          document.getElementById('modal-theater').value = theaters[0].name;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function onBrowseCityChange() {
+      const city = document.getElementById('browse-city').value;
+      const platform = document.getElementById('browse-platform') ? document.getElementById('browse-platform').value : 'all';
+      try {
+        const res = await fetch(`/api/search/theaters?city=${encodeURIComponent(city)}&platform=${encodeURIComponent(platform)}`);
+        const theaters = await res.json();
+        const select = document.getElementById('browse-theater');
+        select.innerHTML = '';
+        theaters.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t.name;
+          opt.textContent = t.name;
+          select.appendChild(opt);
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function renderGroupedShowsHTML(shows) {
+      if (!shows || shows.length === 0) {
+        return `<div class="text-center py-12 text-[#A6A1B5]">No shows listed for this date. Bookings have not opened yet.</div>`;
+      }
+
+      // Group shows by Movie Name
+      const groups = {};
+      shows.forEach(s => {
+        const key = s.movie_name;
+        if (!groups[key]) {
+          groups[key] = {
+            movie_name: s.movie_name,
+            format_type: s.format_type,
+            booking_url: s.booking_url,
+            platform: s.platform || 'District (by Zomato)',
+            timings: []
+          };
+        }
+        groups[key].timings.push({
+          time: s.show_time,
+          status: s.status,
+          format: s.format_type
+        });
+      });
+
+      return Object.values(groups).map(g => {
+        return `
+          <div class="p-6 rounded-2xl glass-card border border-[#373344] interactive-card">
+            <!-- Movie Header -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between pb-4 mb-4 border-b border-[#373344] gap-3">
+              <div>
+                <h4 class="text-xl font-extrabold text-[#F5F2FA] flex items-center gap-2.5 font-display">
+                  <span class="w-8 h-8 rounded-lg bg-[#9565F5]/20 text-[#B18AFF] flex items-center justify-center text-sm">🎬</span>
+                  <span>${g.movie_name}</span>
+                </h4>
+                <div class="text-xs text-[#A6A1B5] mt-2 flex items-center gap-2.5 flex-wrap">
+                  <span class="px-2.5 py-1 rounded-md bg-[#9565F5]/15 text-[#B18AFF] font-bold border border-[#9565F5]/30">${g.format_type}</span>
+                  <span class="text-[#777286]">&bull;</span>
+                  <span class="px-2.5 py-1 rounded-md bg-[#1D1C27] text-[#A6A1B5] font-medium text-xs border border-[#373344]">${g.platform}</span>
+                </div>
+              </div>
+
+              <a href="${g.booking_url}" target="_blank" class="px-5 py-2.5 rounded-xl violet-gradient violet-gradient-hover text-white font-bold text-xs shadow-lg shadow-[#9565F5]/25 inline-flex items-center space-x-2 shrink-0 self-start md:self-auto transition hover:scale-105">
+                <span>Book on ${g.platform}</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i>
+              </a>
+            </div>
+
+            <!-- Show Timings Badges -->
+            <div>
+              <div class="text-xs font-bold uppercase tracking-wider text-[#A6A1B5] mb-3 flex items-center gap-1.5">
+                <i class="fa-solid fa-clock text-[#B18AFF]"></i>
+                <span>Available Showtime Slots:</span>
+              </div>
+              <div class="flex flex-wrap gap-3">
+                ${g.timings.map(t => {
+                  let badgeBg = "bg-[#36C995]/15 text-[#36C995] border-[#36C995]/40 shadow-sm shadow-[#36C995]/10";
+                  let statusText = "Available";
+                  if (t.status === "FILLING_FAST") {
+                    badgeBg = "bg-[#F4B860]/15 text-[#F4B860] border-[#F4B860]/40 shadow-sm shadow-[#F4B860]/10";
+                    statusText = "Fast Filling";
+                  } else if (t.status === "BOOKING_OPENS_SOON") {
+                    badgeBg = "bg-[#1D1C27] text-[#777286] border-[#373344]";
+                    statusText = "Opens Soon";
+                  } else if (t.status === "SOLD_OUT") {
+                    badgeBg = "bg-[#F16B7B]/15 text-[#F16B7B] border-[#F16B7B]/40";
+                    statusText = "Sold Out";
+                  }
+                  return `
+                    <div class="px-4 py-2.5 rounded-xl border text-xs flex flex-col items-center min-w-[110px] ${badgeBg} hover:scale-105 transition-transform duration-200 cursor-default">
+                      <span class="font-extrabold text-sm font-display tracking-wide">${t.time}</span>
+                      <span class="text-[10px] uppercase font-bold tracking-wider mt-0.5 opacity-90">${statusText}</span>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function fetchCurrentTheaterShows() {
+      const city = document.getElementById('browse-city').value;
+      const theater = document.getElementById('browse-theater').value;
+      const date = document.getElementById('browse-date').value;
+      const platform = document.getElementById('browse-platform') ? document.getElementById('browse-platform').value : 'all';
+      const container = document.getElementById('theater-shows-list');
+      const title = document.getElementById('theater-shows-title');
+      const subtitle = document.getElementById('theater-shows-subtitle');
+
+      if (!theater) {
+        alert("Please select a theater.");
+        return;
+      }
+
+      const platLabel = platform === 'district' ? 'District by Zomato' : (platform === 'bookmyshow' ? 'BookMyShow' : 'District & BookMyShow');
+      container.innerHTML = `
+        <div class="text-center py-14 text-[#A6A1B5]">
+          <div class="w-12 h-12 mx-auto rounded-2xl bg-[#9565F5]/15 text-[#B18AFF] flex items-center justify-center text-xl mb-3 animate-pulse">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+          </div>
+          <div class="font-bold text-[#F5F2FA] text-base">Fetching Real-Time Live Data</div>
+          <div class="text-xs text-[#A6A1B5] mt-1">Connecting to ${platLabel} for <strong>${theater}</strong>...</div>
+        </div>
+      `;
+
+      try {
+        const res = await fetch(`/api/theaters/shows?city=${encodeURIComponent(city)}&theater_name=${encodeURIComponent(theater)}&date=${date}&platform=${encodeURIComponent(platform)}`);
+        const data = await res.json();
+
+        title.textContent = `${theater}`;
+        subtitle.innerHTML = `<span class="text-[#F5F2FA] font-medium">${data.status_message}</span> &bull; <span class="text-[#B18AFF] font-semibold">Date: ${date}</span>`;
+
+        if (!data.shows || data.shows.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-16 px-6 glass-card rounded-2xl border border-[#373344]">
+              <div class="w-16 h-16 mx-auto rounded-2xl bg-[#F4B860]/10 border border-[#F4B860]/20 flex items-center justify-center text-[#F4B860] text-2xl mb-4 animate-float">
+                <i class="fa-solid fa-satellite-dish"></i>
+              </div>
+              <h4 class="text-lg font-bold text-[#F5F2FA] mb-1.5 font-display">${data.status_message}</h4>
+              <p class="text-xs text-[#A6A1B5] max-w-lg mx-auto leading-relaxed">
+                No tickets or showtimes have opened for this specific cinema on <strong class="text-[#F5F2FA]">${date}</strong> yet. You can set an alert tracker to receive an email the instant shows are released, or verify directly on ${data.platform || 'Platform'}:
+              </p>
+              <div class="mt-5 flex items-center justify-center gap-3">
+                <a href="${data.booking_url || 'https://www.district.in'}" target="_blank" class="px-6 py-3 rounded-xl violet-gradient violet-gradient-hover text-white text-xs font-bold inline-flex items-center space-x-2 shadow-lg shadow-[#9565F5]/30 transition hover:scale-105">
+                  <span>Open Live Cinema on ${data.platform || 'Platform'}</span>
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = renderGroupedShowsHTML(data.shows);
+
+      } catch (err) {
+        container.innerHTML = `<div class="text-center py-10 text-[#F16B7B] font-medium">Failed to load real-time shows: ${err}</div>`;
+      }
+    }
+
+    async function viewTrackerShows(trackerId) {
+      const modal = document.getElementById('shows-modal');
+      const content = document.getElementById('modal-shows-content');
+      const title = document.getElementById('modal-shows-title');
+      const subtitle = document.getElementById('modal-shows-subtitle');
+
+      modal.classList.remove('hidden');
+      content.innerHTML = `
+        <div class="text-center py-12 text-[#A6A1B5]">
+          <i class="fa-solid fa-spinner fa-spin text-2xl text-[#B18AFF] mb-3"></i>
+          <div class="text-sm font-semibold text-[#F5F2FA]">Fetching Live Shows from BookMyShow / District...</div>
+        </div>
+      `;
+
+      try {
+        const res = await fetch(`/api/trackers/${trackerId}/shows`);
+        const data = await res.json();
+
+        title.textContent = `${data.movie_name || 'Theater Shows'}`;
+        subtitle.innerHTML = `<span>🏛️ ${data.theater_name} (${data.city.toUpperCase()})</span> &bull; <span>📅 ${data.date || data.target_date}</span>`;
+
+        if (!data.shows || data.shows.length === 0) {
+          content.innerHTML = `
+            <div class="text-center py-12 px-4">
+              <div class="w-14 h-14 mx-auto rounded-2xl bg-[#F4B860]/10 border border-[#F4B860]/20 flex items-center justify-center text-[#F4B860] text-2xl mb-4">
+                <i class="fa-solid fa-ticket"></i>
+              </div>
+              <h4 class="text-base font-bold text-[#F5F2FA] mb-1.5 font-display">Bookings Have Not Opened Yet</h4>
+              <p class="text-xs text-[#A6A1B5] max-w-sm mx-auto mb-5 leading-relaxed">
+                ${data.status_message || 'Showzy is continuously monitoring this cinema. You will receive an instant email the exact second shows open!'}
+              </p>
+              <a href="${data.booking_url || 'https://in.bookmyshow.com'}" target="_blank" class="px-5 py-2.5 rounded-xl violet-gradient text-white text-xs font-bold inline-flex items-center space-x-2 shadow-lg shadow-[#9565F5]/30 transition hover:scale-105">
+                <span>Check Live on Platform</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+              </a>
+            </div>
+          `;
+          return;
+        }
+
+        content.innerHTML = renderGroupedShowsHTML(data.shows);
+
+      } catch (e) {
+        content.innerHTML = `<div class="text-center py-10 text-[#F16B7B] font-medium">Error loading live shows: ${e}</div>`;
+      }
+    }
+
+    function closeShowsModal() {
+      document.getElementById('shows-modal').classList.add('hidden');
+    }
+
+    async function loadTrackers() {
+      try {
+        const res = await fetch('/api/trackers');
+        trackersData = await res.json();
+        renderTrackers();
+      } catch (e) {
+        console.error("Error loading trackers", e);
+      }
+    }
+
+    function renderTrackers() {
+      const container = document.getElementById('trackers-container');
+      const placeholder = document.getElementById('no-trackers-placeholder');
+      const countBadge = document.getElementById('tracker-count-badge');
+      
+      countBadge.textContent = trackersData.length;
+
+      if (trackersData.length === 0) {
+        container.innerHTML = '';
+        placeholder.classList.remove('hidden');
+        return;
+      }
+
+      placeholder.classList.add('hidden');
+      container.innerHTML = trackersData.map(t => {
+        const isActive = t.is_active;
+        const platformBadge = t.platform.toUpperCase();
+        
+        return `
+          <div class="glass-card rounded-3xl p-6 border ${isActive ? 'border-[#373344] hover:border-[#9565F5]/50' : 'border-[#373344]/50 opacity-70'} flex flex-col justify-between interactive-card">
+            <div>
+              <!-- Top Row: Platform & Status -->
+              <div class="flex items-center justify-between mb-3.5">
+                <span class="text-[11px] font-extrabold px-3 py-1 rounded-lg ${t.platform.includes('district') ? 'bg-[#F4B860]/15 text-[#F4B860] border border-[#F4B860]/30' : 'bg-[#9565F5]/15 text-[#B18AFF] border border-[#9565F5]/30'}">
+                  ${platformBadge}
+                </span>
+                <span class="text-xs font-semibold px-3 py-0.5 rounded-full ${isActive ? 'bg-[#36C995]/15 text-[#36C995] border border-[#36C995]/40' : 'bg-[#1D1C27] text-[#777286] border border-[#373344]'} flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full ${isActive ? 'bg-[#36C995] animate-pulse' : 'bg-[#777286]'}"></span>
+                  <span>${isActive ? 'Monitoring Live' : 'Paused'}</span>
+                </span>
+              </div>
+
+              <!-- Movie Title -->
+              <h3 class="text-xl font-extrabold text-[#F5F2FA] line-clamp-1 font-display flex items-center flex-wrap gap-2">
+                <span>${t.movie_name}</span>
+                ${(t.movie_name.toLowerCase().includes('any movie') || t.movie_name.toLowerCase().includes('all movies')) ? '<span class="text-[10px] px-2 py-0.5 rounded-md bg-[#9565F5]/25 text-[#B18AFF] border border-[#9565F5]/40 font-bold uppercase tracking-wider">Any Movie</span>' : ''}
+              </h3>
+              
+              <!-- Key Metadata Rows -->
+              <div class="mt-3 space-y-2 text-xs text-[#A6A1B5]">
+                <div class="flex items-center space-x-2">
+                  <i class="fa-solid fa-location-dot text-[#B18AFF] w-4"></i>
+                  <span class="text-[#F5F2FA] font-semibold line-clamp-1">${t.theater_name} (${t.city.toUpperCase()})</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <i class="fa-regular fa-calendar text-[#777286] w-4"></i>
+                  <span>${t.target_date} &bull; <strong class="text-[#B18AFF] font-semibold">${t.format_filter}</strong></span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <i class="fa-regular fa-envelope text-[#777286] w-4"></i>
+                  <span class="truncate text-[#A6A1B5] font-medium">${t.user_email}</span>
+                </div>
+              </div>
+
+              <!-- View Current Shows Button -->
+              <button onclick="viewTrackerShows(${t.id})" class="mt-4 w-full py-2.5 rounded-xl bg-[#1D1C27] hover:bg-[#2D2A3A] text-xs font-bold text-[#F5F2FA] border border-[#373344] hover:border-[#9565F5]/40 flex items-center justify-center space-x-2 transition">
+                <i class="fa-solid fa-masks-theater text-[#B18AFF]"></i>
+                <span>View Shows of this Theater</span>
+              </button>
+
+              <!-- Live Status Pill Box -->
+              <div class="mt-3.5 p-3 rounded-xl bg-[#15151D] border border-[#373344] text-xs">
+                <div class="font-bold text-[#777286] text-[10px] uppercase tracking-wider mb-0.5">Live Status:</div>
+                <div class="${t.status_message && t.status_message.includes('🚨') ? 'text-[#36C995] font-bold' : 'text-[#A6A1B5]'} font-medium">
+                  ${t.status_message || 'Active - Monitoring shows'}
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons Footer -->
+            <div class="mt-5 pt-4 border-t border-[#373344] flex items-center justify-between gap-2">
+              <button onclick="checkTrackerNow(${t.id})" title="Force instant check" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#1D1C27] hover:bg-[#2D2A3A] text-[#F5F2FA] border border-[#373344] hover:border-[#9565F5]/40 flex items-center space-x-1.5 transition">
+                <i class="fa-solid fa-arrows-rotate text-[11px]"></i>
+                <span>Check</span>
+              </button>
+
+              <button onclick="simulateDrop(${t.id})" title="Simulate a new show opening and trigger real email alert" class="text-xs font-bold px-3 py-1.5 rounded-lg bg-[#9565F5]/15 hover:bg-[#9565F5]/30 text-[#B18AFF] border border-[#9565F5]/30 flex items-center space-x-1.5 transition">
+                <i class="fa-solid fa-bolt text-[11px] text-[#F4B860]"></i>
+                <span>Test Alert</span>
+              </button>
+
+              <div class="flex items-center space-x-1">
+                <button onclick="toggleTracker(${t.id})" class="p-2 rounded-lg text-[#A6A1B5] hover:text-[#F5F2FA] hover:bg-[#1D1C27] transition" title="${isActive ? 'Pause' : 'Resume'}">
+                  <i class="fa-solid ${isActive ? 'fa-pause' : 'fa-play'} text-xs"></i>
+                </button>
+                <button onclick="deleteTracker(${t.id})" class="p-2 rounded-lg text-[#A6A1B5] hover:text-[#F16B7B] hover:bg-[#1D1C27] transition" title="Delete">
+                  <i class="fa-solid fa-trash text-xs"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function handleCreateTracker(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-submit-tracker');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Saving & Initializing...</span>`;
+
+      const payload = {
+        platform: document.getElementById('modal-platform').value,
+        city: document.getElementById('modal-city').value,
+        movie_name: document.getElementById('modal-movie').value,
+        theater_name: document.getElementById('modal-theater').value,
+        target_date: document.getElementById('modal-date').value,
+        format_filter: document.getElementById('modal-format').value,
+        user_email: document.getElementById('modal-email').value,
+        check_interval: parseInt(document.getElementById('modal-interval').value)
+      };
+
+      try {
+        const res = await fetch('/api/trackers', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          closeCreateModal();
+          await loadTrackers();
+          alert("✅ Tracker registered! When tickets open, an email alert will be sent immediately.");
+        } else {
+          alert("Failed to create tracker. Check inputs.");
+        }
+      } catch (err) {
+        alert("Error creating tracker: " + err);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-satellite-dish"></i><span>Start Real-Time Tracking</span>`;
+      }
+    }
+
+    async function checkTrackerNow(id) {
+      try {
+        const res = await fetch(`/api/trackers/${id}/check`, { method: 'POST' });
+        const data = await res.json();
+        alert(data.message || "Check completed");
+        await loadTrackers();
+      } catch (e) {
+        alert("Error triggering check: " + e);
+      }
+    }
+
+    async function simulateDrop(id) {
+      try {
+        const res = await fetch(`/api/trackers/${id}/simulate-drop`, { method: 'POST' });
+        const data = await res.json();
+        alert(data.message || "Simulated show alert triggered!");
+        await loadTrackers();
+        loadLogs();
+      } catch (e) {
+        alert("Error: " + e);
+      }
+    }
+
+    async function toggleTracker(id) {
+      try {
+        await fetch(`/api/trackers/${id}/toggle`, { method: 'POST' });
+        await loadTrackers();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function deleteTracker(id) {
+      if (!confirm("Are you sure you want to delete this tracker?")) return;
+      try {
+        await fetch(`/api/trackers/${id}`, { method: 'DELETE' });
+        await loadTrackers();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function loadLogs() {
+      try {
+        const res = await fetch('/api/logs');
+        const logs = await res.json();
+        const tbody = document.getElementById('logs-table-body');
+        
+        if (logs.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-[#777286]">No email alerts recorded yet.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = logs.map(l => `
+          <tr class="hover:bg-[#252431] transition">
+            <td class="px-6 py-4 whitespace-nowrap text-xs text-[#A6A1B5] font-mono">${l.sent_at}</td>
+            <td class="px-6 py-4 whitespace-nowrap font-semibold text-[#F5F2FA]">${l.recipient}</td>
+            <td class="px-6 py-4 text-xs text-[#A6A1B5] font-medium">${l.subject}</td>
+            <td class="px-6 py-4 text-xs text-[#36C995] font-bold">${l.content}</td>
+            <td class="px-6 py-4 text-right">
+              <span class="text-[11px] font-bold px-3 py-1 rounded-full ${l.status === 'SENT' ? 'bg-[#36C995]/15 text-[#36C995] border border-[#36C995]/40' : 'bg-[#F16B7B]/15 text-[#F16B7B] border border-[#F16B7B]/40'}">
+                ${l.status}
+              </span>
+            </td>
+          </tr>
+        `).join('');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-button').forEach(el => {
+        el.className = 'tab-button px-5 py-3 rounded-xl text-xs sm:text-sm font-medium text-[#A6A1B5] hover:text-[#F5F2FA] hover:bg-[#252431] flex items-center space-x-2.5 transition-all';
+      });
+
+      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+      if (activeBtn) {
+        activeBtn.className = 'tab-button px-5 py-3 rounded-xl text-xs sm:text-sm font-bold flex items-center space-x-2.5 transition-all violet-gradient text-white shadow-lg shadow-[#9565F5]/25';
+      }
+
+      if (tabId === 'logs') loadLogs();
+      if (tabId === 'settings') checkSMTPSettings();
+      if (tabId === 'theater-shows') fetchCurrentTheaterShows();
+    }
+
+    function toggleAnyMovieTracking(checked) {
+      const input = document.getElementById('modal-movie');
+      const hint = document.getElementById('any-movie-hint');
+      if (checked) {
+        input.value = "Any Movie (Notify any show released)";
+        input.readOnly = true;
+        input.classList.add('border-[#9565F5]', 'text-[#B18AFF]', 'font-semibold');
+        if (hint) hint.classList.remove('hidden');
+      } else {
+        if (input.value === "Any Movie (Notify any show released)") {
+          input.value = "";
+        }
+        input.readOnly = false;
+        input.classList.remove('border-[#9565F5]', 'text-[#B18AFF]', 'font-semibold');
+        if (hint) hint.classList.add('hidden');
+      }
+    }
+
+    function openCreateModal() {
+      document.getElementById('create-modal').classList.remove('hidden');
+      const anyChk = document.getElementById('modal-any-movie-checkbox');
+      if (anyChk) {
+        anyChk.checked = false;
+        toggleAnyMovieTracking(false);
+      }
+    }
+
+    function closeCreateModal() {
+      document.getElementById('create-modal').classList.add('hidden');
+    }
+
+    function updateIntervalLabel(val) {
+      if (val < 60) {
+        document.getElementById('interval-label').textContent = `Every ${val} seconds`;
+      } else {
+        const mins = (val / 60).toFixed(1).replace('.0', '');
+        document.getElementById('interval-label').textContent = `Every ${mins} minute${mins > 1 ? 's' : ''}`;
+      }
+    }
+  </script>
+</body>
+</html>
