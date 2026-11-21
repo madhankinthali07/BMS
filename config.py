@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: str = os.getenv("SMTP_PASSWORD", "")
     SENDER_EMAIL: str = os.getenv("SENDER_EMAIL", "")
     SENDER_NAME: str = os.getenv("SENDER_NAME", "Showzy")
+    RESEND_API_KEY: str = os.getenv("RESEND_API_KEY", "")
     
     # Default Monitoring Interval (in seconds)
     DEFAULT_CHECK_INTERVAL: int = 120  # Every 2 minutes
@@ -40,8 +41,13 @@ def save_smtp_settings(user: str, password: str, server: str = "smtp.gmail.com",
     """
     Updates in-memory settings and persists them into the .env file.
     """
+    clean_pass = password.strip().replace(" ", "")
     settings.SMTP_USER = user.strip()
-    settings.SMTP_PASSWORD = password.strip().replace(" ", "")  # Google App Passwords often have spaces
+    settings.SMTP_PASSWORD = clean_pass
+    if clean_pass.startswith("re_"):
+        settings.RESEND_API_KEY = clean_pass
+    else:
+        settings.RESEND_API_KEY = ""
     settings.SMTP_SERVER = server.strip()
     settings.SMTP_PORT = port
     settings.SENDER_EMAIL = sender_email.strip() or user.strip()
@@ -61,6 +67,7 @@ SMTP_USER={settings.SMTP_USER}
 SMTP_PASSWORD={settings.SMTP_PASSWORD}
 SENDER_EMAIL={settings.SENDER_EMAIL}
 SENDER_NAME={settings.SENDER_NAME}
+RESEND_API_KEY={settings.RESEND_API_KEY}
 
 DEFAULT_CHECK_INTERVAL={settings.DEFAULT_CHECK_INTERVAL}
 MIN_CHECK_INTERVAL={settings.MIN_CHECK_INTERVAL}

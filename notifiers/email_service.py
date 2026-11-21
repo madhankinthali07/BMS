@@ -38,8 +38,53 @@ class EmailNotifier:
     def sender_name(self) -> str:
         return settings.SENDER_NAME or "Showzy"
 
+    @property
+    def resend_api_key(self) -> str:
+        if self.smtp_password.startswith("re_"):
+            return self.smtp_password
+        if settings.RESEND_API_KEY and not self.smtp_password:
+            return settings.RESEND_API_KEY.strip()
+        return ""
+
     def is_configured(self) -> bool:
+        if self.resend_api_key:
+            return True
         return bool(self.smtp_user and self.smtp_password and self.sender_email)
+
+    def _send_via_resend(self, recipient_email: str, subject: str, html_content: str, plain_text: str) -> bool:
+        import requests
+        api_key = self.resend_api_key
+        # Resend test domain sends to recipient via onboarding@resend.dev
+        from_header = f"{self.sender_name} <onboarding@resend.dev>"
+        if self.sender_email and "@" in self.sender_email and not self.sender_email.endswith("@gmail.com"):
+            from_header = f"{self.sender_name} <{self.sender_email}>"
+
+        payload = {
+            "from": from_header,
+            "to": [recipient_email],
+            "subject": subject,
+            "html": html_content,
+            "text": plain_text
+        }
+        res = requests.post(
+            "https://api.resend.com/emails",
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json"
+            },
+            json=payload,
+            timeout=12
+        )
+        if res.status_code not in (200, 201):
+            try:
+                err_json = res.json()
+                err_msg = err_json.get("message") or str(err_json)
+            except Exception:
+                err_msg = res.text
+            raise RuntimeError(f"Resend HTTP API failed ({res.status_code}): {err_msg}")
+
+        logger.info(f"Show alert email sent successfully via Resend HTTPS API to {recipient_email}")
+        return True
 
     def _build_html_body(
         self,
@@ -191,6 +236,14 @@ class EmailNotifier:
         for s in new_shows:
             plain_text += f"- {s.get('show_time')} | {s.get('format_type')} | {s.get('price_info')} -> {s.get('booking_url')}\n"
 
+        if self.resend_api_key:
+            return self._send_via_resend(
+                recipient_email=recipient_email,
+                subject=subject,
+                html_content=html_content,
+                plain_text=plain_text
+            )
+
         try:
             msg = MIMEMultipart("alternative")
             msg["Subject"] = subject
@@ -221,7 +274,16 @@ class EmailNotifier:
             raise RuntimeError(err_msg)
 
         except Exception as e:
-            err_msg = f"Failed to deliver email via {self.smtp_server}:{self.smtp_port}: {str(e)}"
+            err_str = str(e)
+            if "101" in err_str or "unreachable" in err_str.lower() or "timed out" in err_str.lower():
+                err_msg = (
+                    f"Render Free Tier blocks outbound SMTP port {self.smtp_port} ([Errno 101] Network is unreachable). "
+                    "Render blocks ports 25, 465, and 587 on all free web services to prevent abuse.\n\n"
+                    "👉 Solution 1 (Easiest with Gmail): Deploy to Railway.app (where Gmail port 587 is 100% allowed and works immediately).\n"
+                    "👉 Solution 2 (Stay on Render): Get a free API key at https://resend.com (free 3,000 emails/month) and paste your 're_...' key in the password box to send over HTTPS Port 443."
+                )
+            else:
+                err_msg = f"Failed to deliver email via {self.smtp_server}:{self.smtp_port}: {err_str}"
             logger.error(err_msg)
             raise RuntimeError(err_msg)
 

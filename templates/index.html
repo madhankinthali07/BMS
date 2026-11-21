@@ -520,7 +520,7 @@
             <div>
               <div class="flex items-center justify-between mb-1.5">
                 <label class="block text-xs font-semibold text-[#A6A1B5]">
-                  Google 16-Character App Password
+                  Google App Password or Resend API Key
                 </label>
                 <a href="https://myaccount.google.com/apppasswords" target="_blank" class="text-[#B18AFF] hover:underline text-xs font-semibold flex items-center gap-1">
                   <span>Generate App Password</span>
@@ -528,13 +528,13 @@
                 </a>
               </div>
               <div class="relative">
-                <input type="password" id="smtp-password-input" required placeholder="16-character code (e.g. abcd efgh ijkl mnop)" class="w-full glass-input rounded-xl px-4 py-3 text-sm text-[#F5F2FA] focus:outline-none pr-10">
+                <input type="password" id="smtp-password-input" required placeholder="Google 16-char App Password OR Resend key (re_...)" class="w-full glass-input rounded-xl px-4 py-3 text-sm text-[#F5F2FA] focus:outline-none pr-10">
                 <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3.5 top-3.5 text-[#A6A1B5] hover:text-[#F5F2FA] transition">
                   <i id="eye-icon" class="fa-regular fa-eye"></i>
                 </button>
               </div>
               <p class="text-[11px] text-[#777286] mt-1.5">
-                Never enter your personal account password. Generate a secure 16-character Google App Password.
+                For Gmail, use a 16-character Google App Password. On Render Free Tier (which blocks port 587), you can also paste a free <a href="https://resend.com" target="_blank" class="text-[#B18AFF] underline">Resend API key</a> (<code class="text-[#36C995] font-mono">re_...</code>) to send via HTTPS without port restrictions.
               </p>
             </div>
 
