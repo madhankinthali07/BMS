@@ -992,6 +992,9 @@
       const email = document.getElementById('test-recipient-input').value.trim();
       const statusBox = document.getElementById('test-email-status');
       const btn = document.getElementById('btn-test-email');
+      const user = document.getElementById('smtp-user-input') ? document.getElementById('smtp-user-input').value.trim() : '';
+      const pass = document.getElementById('smtp-password-input') ? document.getElementById('smtp-password-input').value.trim() : '';
+      const sender = document.getElementById('smtp-sender-name') ? document.getElementById('smtp-sender-name').value.trim() : '';
 
       if (!email) {
         alert("Please enter a recipient email address.");
@@ -1003,6 +1006,22 @@
       statusBox.classList.add('hidden');
 
       try {
+        // Auto-save credentials if user entered them in the form
+        if (pass) {
+          await fetch('/api/settings/smtp', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              smtp_user: user || email,
+              smtp_password: pass,
+              smtp_server: 'smtp.gmail.com',
+              smtp_port: 587,
+              sender_name: sender || 'Showzy'
+            })
+          });
+          await checkSMTPSettings();
+        }
+
         const res = await fetch('/api/test-email', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
